@@ -194,39 +194,74 @@ describe('Popup', function () {
 		expect(spy.callCount).to.be(2);
 	});
 
-	it("should take into account icon popupAnchor option", function () {
-		var autoPanBefore = L.Popup.prototype.options.autoPan;
-		L.Popup.prototype.options.autoPan = false;
-		var popupAnchorBefore = L.Icon.Default.prototype.options.popupAnchor;
-		L.Icon.Default.prototype.options.popupAnchor = [0, 0];
+	describe('should take into account icon popupAnchor option on', function () {
+		var latlng = new L.LatLng(55.8, 37.6);
+		var offset = new L.Point(20, 30);
+		var autoPanBefore;
+		var popupAnchorBefore;
+		var icon;
+		var marker1;
+		var marker2;
 
-		var latlng = new L.LatLng(55.8, 37.6),
-		    offset = new L.Point(20, 30),
-		    icon = new L.DivIcon({popupAnchor: offset}),
-		    marker1 = new L.Marker(latlng),
-		    marker2 = new L.Marker(latlng, {icon: icon});
+		before(function () {
+			autoPanBefore = L.Popup.prototype.options.autoPan;
+			L.Popup.prototype.options.autoPan = false;
+			popupAnchorBefore = L.Icon.Default.prototype.options.popupAnchor;
+			L.Icon.Default.prototype.options.popupAnchor = [0, 0];
+		});
 
-		marker1.bindPopup('Popup').addTo(map);
-		marker1.openPopup();
-		var defaultLeft = parseInt(marker1._popup._container.style.left, 10);
-		var defaultBottom = parseInt(marker1._popup._container.style.bottom, 10);
-		marker2.bindPopup('Popup').addTo(map);
-		marker2.openPopup();
-		var offsetLeft = parseInt(marker2._popup._container.style.left, 10);
-		var offsetBottom = parseInt(marker2._popup._container.style.bottom, 10);
-		expect(offsetLeft - offset.x).to.eql(defaultLeft);
-		expect(offsetBottom + offset.y).to.eql(defaultBottom);
+		beforeEach(function () {
+			icon = new L.DivIcon({popupAnchor: offset});
+			marker1 = new L.Marker(latlng);
+			marker2 = new L.Marker(latlng, {icon: icon});
+		});
 
-		// Now retry passing a popup instance to bindPopup
-		marker2.bindPopup(new L.Popup());
-		marker2.openPopup();
-		offsetLeft = parseInt(marker2._popup._container.style.left, 10);
-		offsetBottom = parseInt(marker2._popup._container.style.bottom, 10);
-		expect(offsetLeft - offset.x).to.eql(defaultLeft);
-		expect(offsetBottom + offset.y).to.eql(defaultBottom);
+		after(function () {
+			L.Popup.prototype.options.autoPan = autoPanBefore;
+			L.Icon.Default.prototype.options.popupAnchor = popupAnchorBefore;
+		});
 
-		L.Popup.prototype.options.autoPan = autoPanBefore;
-		L.Icon.Default.prototype.options.popupAnchor = popupAnchorBefore;
+		it.skipInNonPhantom("non-any3d browsers", function () {
+			marker1.bindPopup('Popup').addTo(map);
+			marker1.openPopup();
+			var defaultLeft = parseInt(marker1._popup._container.style.left, 10);
+			var defaultBottom = parseInt(marker1._popup._container.style.bottom, 10);
+			marker2.bindPopup('Popup').addTo(map);
+			marker2.openPopup();
+			var offsetLeft = parseInt(marker2._popup._container.style.left, 10);
+			var offsetBottom = parseInt(marker2._popup._container.style.bottom, 10);
+			expect(offsetLeft - offset.x).to.eql(defaultLeft);
+			expect(offsetBottom + offset.y).to.eql(defaultBottom);
+
+			// Now retry passing a popup instance to bindPopup
+			marker2.bindPopup(new L.Popup());
+			marker2.openPopup();
+			offsetLeft = parseInt(marker2._popup._container.style.left, 10);
+			offsetBottom = parseInt(marker2._popup._container.style.bottom, 10);
+			expect(offsetLeft - offset.x).to.eql(defaultLeft);
+			expect(offsetBottom + offset.y).to.eql(defaultBottom);
+		});
+
+		it.skipInPhantom("any3d browsers", function () {
+			marker1.bindPopup('Popup').addTo(map);
+			marker1.openPopup();
+			var defaultLeft = marker1._popup._container._leaflet_pos.x;
+			var defaultTop = marker1._popup._container._leaflet_pos.y;
+			marker2.bindPopup('Popup').addTo(map);
+			marker2.openPopup();
+			var offsetLeft = marker2._popup._container._leaflet_pos.x;
+			var offsetTop = marker2._popup._container._leaflet_pos.y;
+			expect(offsetLeft - offset.x).to.eql(defaultLeft);
+			expect(offsetTop - offset.y).to.eql(defaultTop);
+
+			// Now retry passing a popup instance to bindPopup
+			marker2.bindPopup(new L.Popup());
+			marker2.openPopup();
+			offsetLeft = marker2._popup._container._leaflet_pos.x;
+			offsetTop = marker2._popup._container._leaflet_pos.y;
+			expect(offsetLeft - offset.x).to.eql(defaultLeft);
+			expect(offsetTop - offset.y).to.eql(defaultTop);
+		});
 	});
 
 	it("prevents an underlying map click for Layer", function () {
@@ -260,6 +295,56 @@ describe('Popup', function () {
 		expect(map.hasLayer(layer._popup)).to.be(true);
 	});
 
+	describe("autoPan option should pan popup into visibility", function () {
+
+		// Helper function which calculates the offset of the map-container & popup-container in pixel
+		function getPopupOffset(map, popup) {
+			var mapOffset = map._container.getBoundingClientRect().top;
+			var popupOffset = popup._container.getBoundingClientRect().top;
+			return popupOffset - mapOffset;
+		}
+
+		it("should not pan map to show popup content if autoPan is disabled", function (done) {
+			map.on('popupopen', function (e) {
+				var popupTopOffset = getPopupOffset(map, e.popup);
+				expect(popupTopOffset).to.be.below(0, "The upper edge of the popup should not be visible");
+				done();
+			});
+			map.openPopup('<div style="height: 400px;"></div>', L.latLng(58.4, 37.6), {
+				autoPan: false
+			});
+		});
+
+		it("should pan map to show popup content if autoPan is enabled", function (done) {
+			map.on('popupopen', function (e) {
+				var popupTopOffset = getPopupOffset(map, e.popup);
+				expect(popupTopOffset).to.be(10, "The upper edge of the popup have a padding of 10");
+				done();
+			});
+			map.openPopup('<div style="height: 400px;"></div>', L.latLng(58.4, 37.6), {
+				autoPan: true,
+				autoPanPadding: L.point(10, 10)
+			});
+		});
+
+		it("should pan map to show popup content if autoPan is enabled even when animating", function (done) {
+			map.on('popupopen', function (e) {
+				var popupTopOffset = getPopupOffset(map, e.popup);
+				expect(popupTopOffset).to.be(10);
+				done();
+			});
+
+			map.panTo([55.8, 40.7], {
+				animate: true,
+				duration: 1
+			});
+
+			map.openPopup('<div style="height: 400px;"></div>', L.latLng(58.4, 37.6), {
+				autoPan: true,
+				autoPanPadding: L.point(10, 10)
+			});
+		});
+	});
 });
 
 describe("L.Map#openPopup", function () {

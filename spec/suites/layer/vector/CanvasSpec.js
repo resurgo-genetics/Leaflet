@@ -189,4 +189,113 @@ describe('Canvas', function () {
 		}, this);
 	});
 
+	describe('#bringToBack', function () {
+
+		var c, map;
+
+		beforeEach(function () {
+			c = document.createElement('div');
+			c.style.width = '400px';
+			c.style.height = '400px';
+			map = new L.Map(c, {preferCanvas: true});
+			map.setView(new L.LatLng(0, 0), 0);
+			document.body.appendChild(c);
+		});
+
+		afterEach(function () {
+			document.body.removeChild(c);
+		});
+
+		it('is a no-op for layers not on a map', function () {
+			var path = new L.Polyline([[1, 2], [3, 4], [5, 6]]);
+			expect(path.bringToBack()).to.equal(path);
+		});
+
+		it('is a no-op for layers no longer in a LayerGroup', function () {
+			var group = new L.LayerGroup().addTo(map);
+			var path = new L.Polyline([[1, 2], [3, 4], [5, 6]]).addTo(group);
+
+			group.clearLayers();
+
+			expect(path.bringToBack()).to.equal(path);
+		});
+	});
+
+
+	describe('#bringToFront', function () {
+
+		var c, map;
+
+		beforeEach(function () {
+			c = document.createElement('div');
+			c.style.width = '400px';
+			c.style.height = '400px';
+			map = new L.Map(c, {preferCanvas: true});
+			map.setView(new L.LatLng(0, 0), 0);
+			document.body.appendChild(c);
+		});
+
+		afterEach(function () {
+			document.body.removeChild(c);
+		});
+		it('is a no-op for layers not on a map', function () {
+			var path = new L.Polyline([[1, 2], [3, 4], [5, 6]]);
+			expect(path.bringToFront()).to.equal(path);
+		});
+
+		it('is a no-op for layers no longer in a LayerGroup', function () {
+			var group = new L.LayerGroup().addTo(map);
+			var path = new L.Polyline([[1, 2], [3, 4], [5, 6]]).addTo(group);
+
+			group.clearLayers();
+
+			expect(path.bringToFront()).to.equal(path);
+		});
+	});
 });
+
+describe('Canvas remove', function () {
+
+	var c;
+
+	before(function () {
+		c = document.createElement('div');
+		c.style.width = '400px';
+		c.style.height = '400px';
+		c.style.position = 'absolute';
+		c.style.top = '0';
+		c.style.left = '0';
+		document.body.appendChild(c);
+	});
+
+	after(function () {
+		document.body.removeChild(c);
+	});
+
+	function createCanvasMap(c, options) {
+		var map = new L.Map(c, options);
+		map.setView([0, 0], 6);
+		var p2ll = function (x, y) {
+			return map.layerPointToLatLng([x, y]);
+		};
+		var latLngs = [p2ll(0, 0), p2ll(0, 100), p2ll(100, 100), p2ll(100, 0)];
+		var layer = L.polygon(latLngs).addTo(map);
+		return map;
+	}
+
+	it("can remove the map without errors", function (done) {
+		var map1 = createCanvasMap(c, {preferCanvas: true, zoomControl: false});
+		map1.remove();
+		L.Util.requestAnimFrame(function () { done(); });
+	});
+
+	it("can remove renderer without errors", function (done) {
+		var canvas = L.canvas();
+		var map = createCanvasMap(c, {renderer: canvas, zoomControl: false});
+		canvas.remove();
+		map.remove();
+		L.Util.requestAnimFrame(function () { done(); });
+	});
+
+});
+

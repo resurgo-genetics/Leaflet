@@ -55,19 +55,12 @@ Let's have a look at a simple map locked at zoom zero:
 Notice that the "whole earth" is just one image, 256 pixels wide and 256 pixels high:
 
 <div class='tiles' style='text-align: center'>
-<img src="http://a.basemaps.cartocdn.com/light_all/0/0/0.png" class="bordered-img" alt=""/>
+<img src="https://a.basemaps.cartocdn.com/light_all/0/0/0.png" class="bordered-img" alt=""/>
 </div>
 
-Just to be clear: the earth is not a square. Rather, the earth is shaped like [a weird potato](https://commons.wikimedia.org/wiki/File:GRACE_globe_animation.gif) that can be approximated to [something similar to a sphere](https://en.wikipedia.org/wiki/Geoid).
+Just to be clear: the earth is not a square. Rather, the earth has an irregular shape that can be approximated to [something similar to a sphere](https://en.wikipedia.org/wiki/Geoid).
 
-<div class='tiles legend' style='text-align: center'>
-<a title="By NASA/JPL/University of Texas Center for Space Research. (http://photojournal.jpl.nasa.gov/catalog/PIA12146) [Public domain], via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File%3AGRACE_globe_animation.gif"><img width="256" alt="GRACE globe animation" src="https://upload.wikimedia.org/wikipedia/commons/7/78/GRACE_globe_animation.gif"/>
-<br/>
-Potato earth image by NASA/JPL/University of Texas Center for Space Research</a>
-with help of the <a href='https://en.wikipedia.org/wiki/Gravity_Recovery_and_Climate_Experiment'>GRACE satellites</a>.
-</div>
-
-So we *assume* that the earth is mosly round. To make it flat, we put an imaginary cylinder around, unroll it, and cut it so it looks square:
+So we *assume* that the earth is mostly round. To make it flat, we put an imaginary cylinder around, unroll it, and cut it so it looks square:
 
 <div class='tiles legend' style='text-align: center'>
 <a title="By derived from US Government USGS [Public domain], via Wikimedia Commons" href="https://en.wikipedia.org/wiki/Map_projection#Cylindrical"><img width="512" alt="Usgs map mercator" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Usgs_map_mercator.svg/512px-Usgs_map_mercator.svg.png"/>
@@ -93,17 +86,17 @@ simpler, and allows Leaflet (and other map libraries) to be fast.
 For now, let's just ***assume*** that the world is a square:
 
 <div class='tiles' style='text-align: center'>
-<img src="http://a.basemaps.cartocdn.com/light_all/0/0/0.png" class="bordered-img" alt=""/>
+<img src="https://a.basemaps.cartocdn.com/light_all/0/0/0.png" class="bordered-img" alt=""/>
 </div>
 
 When we represent the world at zoom level **zero**, it's 256 pixels wide and high. When we go into zoom level **one**, it doubles its width and height, and can be represented by four 256-pixel-by-256-pixel images:
 
 <div class='tiles' style='text-align: center'>
 <div>
-<img src="http://a.basemaps.cartocdn.com/light_all/1/0/0.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/1/1/0.png" class="bordered-img" alt=""/>
+<img src="https://a.basemaps.cartocdn.com/light_all/1/0/0.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/1/1/0.png" class="bordered-img" alt=""/>
 </div>
 <div>
-<img src="http://a.basemaps.cartocdn.com/light_all/1/0/1.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/1/1/1.png" class="bordered-img" alt=""/>
+<img src="https://a.basemaps.cartocdn.com/light_all/1/0/1.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/1/1/1.png" class="bordered-img" alt=""/>
 </div>
 </div>
 
@@ -111,30 +104,30 @@ At each zoom level, each tile is divided in four, and its size (length of the ed
 
 <table><tr><td>
 <div class='tiles small' style='text-align: center'>
-<img src="http://a.basemaps.cartocdn.com/light_all/0/0/0.png" class="bordered-img" alt=""/>
+<img src="https://a.basemaps.cartocdn.com/light_all/0/0/0.png" class="bordered-img" alt=""/>
 </div>
 </td><td>
 <div class='tiles small' style='text-align: center'>
 <div>
-<img src="http://a.basemaps.cartocdn.com/light_all/1/0/0.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/1/1/0.png" class="bordered-img" alt=""/>
+<img src="https://a.basemaps.cartocdn.com/light_all/1/0/0.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/1/1/0.png" class="bordered-img" alt=""/>
 </div>
 <div>
-<img src="http://a.basemaps.cartocdn.com/light_all/1/0/1.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/1/1/1.png" class="bordered-img" alt=""/>
+<img src="https://a.basemaps.cartocdn.com/light_all/1/0/1.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/1/1/1.png" class="bordered-img" alt=""/>
 </div>
 </div>
 </td><td>
 <div class='tiles small' style='text-align: center'>
 <div>
-<img src="http://a.basemaps.cartocdn.com/light_all/2/0/0.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/2/1/0.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/2/2/0.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/2/3/0.png" class="bordered-img" alt=""/>
+<img src="https://a.basemaps.cartocdn.com/light_all/2/0/0.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/2/1/0.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/2/2/0.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/2/3/0.png" class="bordered-img" alt=""/>
 </div>
 <div>
-<img src="http://a.basemaps.cartocdn.com/light_all/2/0/1.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/2/1/1.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/2/2/1.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/2/3/1.png" class="bordered-img" alt=""/>
+<img src="https://a.basemaps.cartocdn.com/light_all/2/0/1.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/2/1/1.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/2/2/1.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/2/3/1.png" class="bordered-img" alt=""/>
 </div>
 <div>
-<img src="http://a.basemaps.cartocdn.com/light_all/2/0/2.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/2/1/2.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/2/2/2.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/2/3/2.png" class="bordered-img" alt=""/>
+<img src="https://a.basemaps.cartocdn.com/light_all/2/0/2.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/2/1/2.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/2/2/2.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/2/3/2.png" class="bordered-img" alt=""/>
 </div>
 <div>
-<img src="http://a.basemaps.cartocdn.com/light_all/2/0/3.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/2/1/3.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/2/2/3.png" class="bordered-img" alt=""/><img src="http://a.basemaps.cartocdn.com/light_all/2/3/3.png" class="bordered-img" alt=""/>
+<img src="https://a.basemaps.cartocdn.com/light_all/2/0/3.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/2/1/3.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/2/2/3.png" class="bordered-img" alt=""/><img src="https://a.basemaps.cartocdn.com/light_all/2/3/3.png" class="bordered-img" alt=""/>
 </div>
 </div>
 </td></tr>
